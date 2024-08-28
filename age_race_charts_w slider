@@ -1,0 +1,37 @@
+SELECT
+  CASE
+    WHEN demographics.Age BETWEEN 18 AND 25 THEN '18-25'
+    WHEN demographics.Age BETWEEN 26 AND 35 THEN '26-35'
+    WHEN demographics.Age BETWEEN 36 AND 45 THEN '36-45'
+    WHEN demographics.Age BETWEEN 46 AND 60 THEN '46-60'
+    WHEN demographics.Age BETWEEN 61 AND 80 THEN '61-80'
+    WHEN demographics.Age > 80 THEN '81+'
+    ELSE 'Unknown'
+  END AS Age_Group,
+  demographics.RaceName AS Race,
+  AVG(scores.vote_prop2024) AS Average_Vote_Propensity
+FROM
+  `prod-generation-data-176bffe6.voterfile_ok.modelscores_ok` AS scores
+JOIN
+  `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok` AS demographics
+ON
+  scores.VANID = demographics.Voter_File_VANID
+WHERE
+  demographics.State = 'OK'
+  AND demographics.Age IS NOT NULL
+  AND demographics.RaceName IS NOT NULL
+  AND demographics.Party = 'D'  
+GROUP BY
+  CASE
+    WHEN demographics.Age BETWEEN 18 AND 25 THEN '18-25'
+    WHEN demographics.Age BETWEEN 26 AND 35 THEN '26-35'
+    WHEN demographics.Age BETWEEN 36 AND 45 THEN '36-45'
+    WHEN demographics.Age BETWEEN 46 AND 60 THEN '46-60'
+    WHEN demographics.Age BETWEEN 61 AND 80 THEN '61-80'
+    WHEN demographics.Age > 80 THEN '81+'
+    ELSE 'Unknown'
+  END,
+  Race
+ORDER BY
+  Age_Group,
+  Race;

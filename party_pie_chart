@@ -1,0 +1,21 @@
+-- party pie chart--
+SELECT
+  County,
+  CASE
+    WHEN Party = 'D' THEN 'Democrat'
+    WHEN Party = 'R' THEN 'Republican'
+    WHEN Party = 'L' THEN 'Libertarian'
+    ELSE 'Other'
+  END AS Party_Category,
+  COUNT(*) AS Voter_Count
+FROM
+  `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok`
+WHERE
+  State = 'OK'
+  AND Party IS NOT NULL
+GROUP BY
+  County,
+  Party_Category
+ORDER BY
+  County,
+  Voter_Count DESC;

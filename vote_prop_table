@@ -1,0 +1,20 @@
+SELECT
+    vd.County,
+    COUNT(*) AS total_population,
+    COUNTIF(vd.Party = 'D') AS total_democrats,
+    COUNTIF(vd.Party = 'D' AND vd.General22 IS NOT NULL) AS democrats_voted_2022,
+    COUNTIF(vd.Party = 'R' AND vd.General22 IS NOT NULL) AS republicans_voted_2022,
+    ROUND(AVG(CASE WHEN vd.Party = 'D' THEN ms.vote_prop2024 ELSE NULL END)) AS avg_voter_propensity_democrats,
+    ROUND(AVG(CASE WHEN vd.Party = 'R' THEN ms.vote_prop2024 ELSE NULL END)) AS avg_voter_propensity_republicans
+FROM
+    `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok` vd
+LEFT JOIN
+    `prod-generation-data-176bffe6.voterfile_ok.modelscores_ok` ms
+ON
+    vd.Voter_File_VANID = ms.VANID
+WHERE
+    vd.State = 'OK'
+GROUP BY
+    vd.County
+ORDER BY
+    vd.County;

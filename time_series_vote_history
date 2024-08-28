@@ -1,0 +1,65 @@
+-- time series for party vote history--
+WITH vote_history AS (
+  SELECT 
+    IFNULL(County, 'Unknown') AS County,
+    Party,
+    '2022' AS Election_Year,
+    COUNTIF(General22 IS NOT NULL) AS Votes
+  FROM `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok`
+  WHERE State = 'OK' AND Party IN ('D', 'R')
+  GROUP BY County, Party
+  UNION ALL
+  SELECT 
+    IFNULL(County, 'Unknown') AS County,
+    Party,
+    '2020' AS Election_Year,
+    COUNTIF(General20 IS NOT NULL) AS Votes
+  FROM `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok`
+  WHERE State = 'OK' AND Party IN ('D', 'R')
+  GROUP BY County, Party
+  UNION ALL
+  SELECT 
+    IFNULL(County, 'Unknown') AS County,
+    Party,
+    '2019' AS Election_Year,
+    COUNTIF(General19 IS NOT NULL) AS Votes
+  FROM `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok`
+  WHERE State = 'OK' AND Party IN ('D', 'R')
+  GROUP BY County, Party
+  UNION ALL
+  SELECT 
+    IFNULL(County, 'Unknown') AS County,
+    Party,
+    '2018' AS Election_Year,
+    COUNTIF(General18 IS NOT NULL) AS Votes
+  FROM `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok`
+  WHERE State = 'OK' AND Party IN ('D', 'R')
+  GROUP BY County, Party
+  UNION ALL
+  SELECT 
+    IFNULL(County, 'Unknown') AS County,
+    Party,
+    '2017' AS Election_Year,
+    COUNTIF(General17 IS NOT NULL) AS Votes
+  FROM `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok`
+  WHERE State = 'OK' AND Party IN ('D', 'R')
+  GROUP BY County, Party
+  UNION ALL
+  SELECT 
+    IFNULL(County, 'Unknown') AS County,
+    Party,
+    '2016' AS Election_Year,
+    COUNTIF(General16 IS NOT NULL) AS Votes
+  FROM `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok`
+  WHERE State = 'OK' AND Party IN ('D', 'R')
+  GROUP BY County, Party
+)
+
+SELECT 
+  County,
+  Party,
+  Election_Year,
+  SUM(Votes) AS Total_Votes
+FROM vote_history
+GROUP BY County, Party, Election_Year
+ORDER BY County, Party, Election_Year;

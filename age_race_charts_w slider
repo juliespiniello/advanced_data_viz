@@ -9,7 +9,8 @@ SELECT
     ELSE 'Unknown'
   END AS Age_Group,
   demographics.RaceName AS Race,
-  AVG(scores.vote_prop2024) AS Average_Vote_Propensity
+  scores.vote_prop2024 AS Vote_Propensity
+
 FROM
   `prod-generation-data-176bffe6.voterfile_ok.modelscores_ok` AS scores
 JOIN

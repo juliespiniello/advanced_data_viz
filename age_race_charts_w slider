@@ -10,12 +10,13 @@ SELECT
   END AS Age_Group,
   demographics.RaceName AS Race,
   scores.vote_prop2024 AS Vote_Propensity,
-  COUNT(DISTINCT demographics.Voter_File_VANID) AS Voter_Count  
+  COUNT(DISTINCT demographics.Voter_File_VANID) AS Voter_Count 
+FROM
   `prod-generation-data-176bffe6.voterfile_ok.modelscores_ok` AS scores
 JOIN
   `prod-generation-data-176bffe6.voterfile_ok.voterfile_demographics_ok` AS demographics
 ON
-  scores.Voter_File_VANID = demographics.Voter_File_VANID
+  scores.VANID = demographics.Voter_File_VANID
 WHERE
   demographics.State = 'OK'
   AND demographics.Age IS NOT NULL
